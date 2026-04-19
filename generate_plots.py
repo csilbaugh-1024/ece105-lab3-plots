@@ -9,11 +9,12 @@ Usage
     python generate_plots.py
 """
 
+import numpy as np
+import matplotlib.pyplot as plt
+
 # Create a function generate_data(seed) that returns sensor_a, sensor_b,
 # and timestamps arrays with the same parameters as in the notebook.
 # Use NumPy-style docstring with Parameters and Returns sections.
-
-import numpy as np
 
 def generate_data(seed):
     """Generate synthetic temperature sensor readings.
@@ -37,3 +38,40 @@ def generate_data(seed):
     sensor_b = rng.normal(loc=27.0, scale=4.5, size=200)
     timestamps = rng.uniform(low=0.0, high=10.0, size=200)
     return sensor_a, sensor_b, timestamps
+
+
+# Create plot_scatter(sensor_a, sensor_b, timestamps, ax) that draws
+# the scatter plot from the notebook onto the given Axes object.
+# NumPy-style docstring. Modifies ax in place, returns None.
+
+
+
+def plot_scatter(sensor_a, sensor_b, timestamps, ax):
+    """Plot sensor readings as a scatter plot over time.
+    
+    Draws scatter points for both sensors with distinct colors and transparency,
+    modifying the Axes object in place.
+    
+    Parameters
+    ----------
+    sensor_a : ndarray, shape (200,)
+        Temperature readings from sensor A in Celsius.
+    sensor_b : ndarray, shape (200,)
+        Temperature readings from sensor B in Celsius.
+    timestamps : ndarray, shape (200,)
+        Measurement timestamps in seconds.
+    ax : matplotlib.axes.Axes
+        Axes object to modify in place.
+    
+    Returns
+    -------
+    None
+    """
+    ax.scatter(timestamps, sensor_a, color='blue', label='Sensor A', alpha=0.6)
+    ax.scatter(timestamps, sensor_b, color='orange', label='Sensor B', alpha=0.6)
+    ax.set_xlabel('Time (seconds)')
+    ax.set_ylabel('Temperature (C)')
+    ax.set_title('Sensor Readings Over Time')
+    ax.legend()
+    ax.grid(True, alpha=0.3)
+
