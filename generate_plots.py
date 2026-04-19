@@ -143,15 +143,16 @@ def plot_boxplot(sensor_a, sensor_b, ax):
     ax.legend()
     ax.grid(True, alpha=0.3, axis='y')
 
-# Create main() that generates data, creates a 1x3 subplot figure,
+# Create main() that generates data, creates a 2x2 subplot figure,
 # calls each plot function, adjusts layout, and saves as sensor_analysis.png
 # at 150 DPI with tight bounding box.
 
 def main():
     """Generate synthetic sensor data and create publication-quality plots.
     
-    Generates temperature sensor readings, creates a figure with three subplots
-    (scatter, histogram, and box plot), and saves the figure as a PNG file.
+    Generates temperature sensor readings, creates a figure with four subplots
+    in a 2x2 layout (scatter, histogram, box plot, and summary statistics),
+    and saves the figure as a PNG file.
     
     Returns
     -------
@@ -159,16 +160,40 @@ def main():
     """
     sensor_a, sensor_b, timestamps = generate_data(seed=5074)
     
-    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+    fig, axes = plt.subplots(2, 2, figsize=(14, 10))
     
-    plot_scatter(sensor_a, sensor_b, timestamps, axes[0])
-    plot_histogram(sensor_a, sensor_b, axes[1])
-    plot_boxplot(sensor_a, sensor_b, axes[2])
+    plot_scatter(sensor_a, sensor_b, timestamps, axes[0, 0])
+    plot_histogram(sensor_a, sensor_b, axes[0, 1])
+    plot_boxplot(sensor_a, sensor_b, axes[1, 0])
+    
+    # Summary statistics in the fourth subplot
+    ax_stats = axes[1, 1]
+    ax_stats.axis('off')
+    
+    stats_text = (
+        f"Summary Statistics\n\n"
+        f"Sensor A:\n"
+        f"  Mean: {sensor_a.mean():.2f}°C\n"
+        f"  Std Dev: {sensor_a.std():.2f}°C\n"
+        f"  Min: {sensor_a.min():.2f}°C\n"
+        f"  Max: {sensor_a.max():.2f}°C\n"
+        f"  Median: {np.median(sensor_a):.2f}°C\n\n"
+        f"Sensor B:\n"
+        f"  Mean: {sensor_b.mean():.2f}°C\n"
+        f"  Std Dev: {sensor_b.std():.2f}°C\n"
+        f"  Min: {sensor_b.min():.2f}°C\n"
+        f"  Max: {sensor_b.max():.2f}°C\n"
+        f"  Median: {np.median(sensor_b):.2f}°C"
+    )
+    
+    ax_stats.text(0.1, 0.9, stats_text, transform=ax_stats.transAxes,
+                  fontfamily='monospace', fontsize=10, verticalalignment='top')
     
     plt.tight_layout()
     plt.savefig('sensor_analysis.png', dpi=150, bbox_inches='tight')
     print("Saved sensor_analysis.png")
     plt.close()
+
 
 
 if __name__ == '__main__':
