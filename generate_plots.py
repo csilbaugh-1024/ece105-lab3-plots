@@ -135,10 +135,41 @@ def plot_boxplot(sensor_a, sensor_b, ax):
     """
     overall_mean = np.mean(np.concatenate([sensor_a, sensor_b]))
     
-    ax.boxplot([sensor_a, sensor_b], labels=['Sensor A', 'Sensor B'])
+    ax.boxplot([sensor_a, sensor_b], tick_labels=['Sensor A', 'Sensor B'])
     ax.axhline(overall_mean, color='red', linestyle='--', linewidth=2,
                label=f'Overall mean: {overall_mean:.2f}C')
     ax.set_ylabel('Temperature (deg C)')
     ax.set_title('Temperature Distribution: Sensor A vs Sensor B')
     ax.legend()
     ax.grid(True, alpha=0.3, axis='y')
+
+# Create main() that generates data, creates a 1x3 subplot figure,
+# calls each plot function, adjusts layout, and saves as sensor_analysis.png
+# at 150 DPI with tight bounding box.
+
+def main():
+    """Generate synthetic sensor data and create publication-quality plots.
+    
+    Generates temperature sensor readings, creates a figure with three subplots
+    (scatter, histogram, and box plot), and saves the figure as a PNG file.
+    
+    Returns
+    -------
+    None
+    """
+    sensor_a, sensor_b, timestamps = generate_data(seed=5074)
+    
+    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+    
+    plot_scatter(sensor_a, sensor_b, timestamps, axes[0])
+    plot_histogram(sensor_a, sensor_b, axes[1])
+    plot_boxplot(sensor_a, sensor_b, axes[2])
+    
+    plt.tight_layout()
+    plt.savefig('sensor_analysis.png', dpi=150, bbox_inches='tight')
+    print("Saved sensor_analysis.png")
+    plt.close()
+
+
+if __name__ == '__main__':
+    main()
